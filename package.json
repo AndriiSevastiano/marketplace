@@ -1,0 +1,92 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "implementation of onion architecture at backed using express",
+  "main": "main.js",
+  "scripts": {
+    "dev": "NODE_ENV=development ts-node --transpile-only src/main.ts",
+    "ts:watch": "tsc-watch --onSuccess \"node --inspect ./dist/main.js\" ",
+    "watch": "nodemon --trace-warnings",
+    "rimraf": "rimraf dist",
+    "start:dev": "npm run build && node dist/main.js",
+    "build:dev": "tsc && node ./dist/main.js",
+    "build": "npm run rimraf && tsc",
+    "typeorm": "ts-node --require tsconfig-paths/register ./node_modules/typeorm/cli.js -d src/datasource.config.ts",
+    "typeorm:create": "npm run typeorm migration:create",
+    "typeorm:generate": "npm run typeorm migration:generate",
+    "typeorm:run": "npm run typeorm migration:run",
+    "typeorm:revert": "npm run typeorm migration:revert",
+    "prettier:check": "npx prettier ./src/**/* --check",
+    "prettier:write": "npx prettier ./src/**/* --write",
+    "lint": "eslint . --ext .js,.ts",
+    "generate": "ts-node --transpile-only ./src/graphql/schemas/schema.ts",
+    "test": "npm run generate && jest"
+  },
+  "jest": {
+    "preset": "ts-jest",
+    "globals": {
+      "ts-jest": {
+        "diagnostics": {
+          "warnOnly": true
+        }
+      }
+    },
+    "testEnvironment": "node"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AndriiSevastiano/marketplace.git"
+  },
+  "keywords": [
+    "typescript",
+    "express",
+    "inversify"
+  ],
+  "author": "AndriiSevastiano",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/AndriiSevastiano/marketplace/issues"
+  },
+  "homepage": "https://github.com/AndriiSevastiano/marketplace#readme",
+  "dependencies": {
+    "@prisma/client": "^5.0.0",
+    "apollo-server": "^3.12.0",
+    "class-transformer": "^0.5.1",
+    "class-validator": "^0.14.0",
+    "express": "^4.18.2",
+    "graphql": "^16.7.1",
+    "inversify": "^6.0.1",
+    "inversify-express-utils": "^6.4.3",
+    "nexus": "^1.3.0",
+    "pg": "^8.11.1",
+    "reflect-metadata": "^0.1.13",
+    "typeorm": "^0.3.17",
+    "uuid": "^9.0.0",
+    "winston": "^3.10.0"
+  },
+  "devDependencies": {
+    "@faker-js/faker": "^8.0.2",
+    "@types/express": "^4.17.17",
+    "@types/jest": "^29.5.3",
+    "@types/node": "^20.4.2",
+    "@types/supertest": "^2.0.12",
+    "@types/uuid": "^9.0.2",
+    "@typescript-eslint/eslint-plugin": "^6.1.0",
+    "@typescript-eslint/parser": "^6.1.0",
+    "eslint": "^8.45.0",
+    "eslint-config-prettier": "^8.8.0",
+    "eslint-plugin-prettier": "^5.0.0",
+    "get-port": "^5.1.1",
+    "graphql-request": "^6.1.0",
+    "jest": "^29.6.1",
+    "nodemon": "^3.0.1",
+    "prettier": "^3.0.0",
+    "prisma": "^5.0.0",
+    "supertest": "^6.3.3",
+    "ts-jest": "^29.1.1",
+    "ts-node": "^10.9.1",
+    "tsc-watch": "^6.0.4",
+    "tsconfig-paths": "^4.2.0",
+    "typescript": "^5.1.6"
+  }
+}

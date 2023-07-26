@@ -1,0 +1,49 @@
+version: '3'
+services:
+  db:
+    container_name: marketplace
+    image: postgres
+    restart: always
+    env_file:
+      - ./.env.development
+    volumes:
+      - ./pgdata:/var/lib/postgresql/data
+    networks:
+      - marketplace_app_api
+  pgadmin:
+    container_name: makretplace-app-pgadmin4
+    image: dpage/pgadmin4
+    restart: always
+    env_file:
+      - ./.env.development
+    ports:
+      - "${WEBSERVER_PORT}:${PGADMIN_LISTEN_PORT}"
+    volumes:
+      - ./pgadmin-data:/var/lib/pgadmin # Named volumn in container
+    depends_on:
+      - db
+    networks:
+      - marketplace_app_api
+  dev:
+    container_name: marketplace_dev
+    image: marketplace_app_api
+    env_file:
+      - ./.env.development
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    volumes:
+      - .:/app # create volumn in current directory of container
+      - /app/node_modules # anonymus/unnamed volumn in container
+    ports:
+      - "${APP_PORT}:${APP_PORT}"
+    depends_on:
+      - db
+    restart: unless-stopped
+    networks:
+      - marketplace_app_api
+networks:
+  marketplace_app_api:
+volumes:
+  pgdata:
+  pgadmin-data:

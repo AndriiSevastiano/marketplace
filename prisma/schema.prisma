@@ -1,0 +1,83 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id               Int                @id @default(autoincrement())
+  name             String             @db.VarChar(30)
+  surname          String             @db.VarChar(30)
+  email            String             @unique @db.VarChar(30)
+  phone_number     String             @unique @db.VarChar(10)
+  avatar           Avatar?
+  comment          Comment[]
+  comment_reaction Comment_Reaction[]
+  cart_product     Cart_Product[]
+}
+
+model Avatar {
+  id     Int  @id @default(autoincrement())
+  user   User @relation(fields: [userId], references: [id])
+  userId Int  @unique
+}
+
+model Comment {
+  id               Int                @id @default(autoincrement())
+  body             String             @db.VarChar(200)
+  User             User               @relation(fields: [userId], references: [id])
+  Product          Product            @relation(fields: [productId], references: [id])
+  productId        Int
+  userId           Int
+  comment_reaction Comment_Reaction[]
+}
+
+model Comment_Reaction {
+  id        Int     @id @default(autoincrement())
+  isLike    Boolean @unique() @default(true)
+  User      User    @relation(fields: [userId], references: [id])
+  comment   Comment @relation(fields: [commentId], references: [id])
+  commentId Int
+  userId    Int
+}
+
+model Cart_Product {
+  id        Int  @id @default(autoincrement())
+  User      User @relation(fields: [userId], references: [id])
+  userId    Int
+  productId Int
+  amount    Int  @default(1) @db.SmallInt()
+}
+
+model Product {
+  id          Int       @id @default(autoincrement())
+  name        String    @db.VarChar(32)
+  description String    @db.VarChar(200)
+  price       Float     @default(1)
+  img         String    @unique
+  type        Type      @relation(fields: [typeId], references: [id])
+  brand       Brand     @relation(fields: [brandId], references: [id])
+  typeId      Int
+  brandId     Int
+  relese_date DateTime?
+  comments    Comment[]
+}
+
+model Brand {
+  id          Int       @id @default(autoincrement())
+  brand       String    @unique @db.VarChar(20)
+  about_brand String    @db.VarChar(200)
+  products    Product[]
+}
+
+model Type {
+  id       Int       @id @default(autoincrement())
+  type     String    @db.VarChar(20)
+  products Product[]
+}
