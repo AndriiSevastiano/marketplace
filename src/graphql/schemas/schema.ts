@@ -1,14 +1,14 @@
 import { makeSchema } from 'nexus'
 import { join } from 'path'
-import * as post from './Post'
+import * as types from './User'
 export const schema = makeSchema({
-    types: [post],
+    types: types,
     outputs: {
         typegen: join(__dirname, '..', 'nexus-typegen.ts'),
         schema: join(__dirname, '..', 'schema.graphql'),
     },
     contextType: {
-        module: join(__dirname, './../context.ts'),
+        module: join(__dirname, './../IContext.ts'),
         export: 'Context',
     },
 })
