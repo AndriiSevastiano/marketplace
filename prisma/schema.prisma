@@ -16,11 +16,13 @@ model User {
   surname          String             @db.VarChar(30)
   email            String             @unique @db.VarChar(30)
   phone_number     String             @unique @db.VarChar(10)
-  password         String             @default("") @db.VarChar(40)
+  password         String             @default("") @db.VarChar(120)
   avatar           Avatar?
   comment          Comment[]
   comment_reaction Comment_Reaction[]
   cart_product     Cart_Product[]
+  CreatedAt        DateTime           @default(now())
+  UpdatedAt        DateTime           @default(now())
 }
 
 model Avatar {

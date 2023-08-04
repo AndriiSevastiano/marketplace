@@ -37,7 +37,7 @@ type Post implements CommonFields {
 }
 
 type Query {
-  users: [User]!
+  hello: String
 }
 
 type User implements CommonFields {

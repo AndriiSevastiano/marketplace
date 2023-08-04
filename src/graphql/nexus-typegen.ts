@@ -78,7 +78,7 @@ export interface NexusGenFieldTypes {
     title: string | null; // String
   }
   Query: { // field return type
-    users: Array<NexusGenRootTypes['User'] | null>; // [User]!
+    hello: string | null; // String
   }
   User: { // field return type
     CreatedAt: string | null; // String
@@ -112,7 +112,7 @@ export interface NexusGenFieldTypeNames {
     title: 'String'
   }
   Query: { // field return type name
-    users: 'User'
+    hello: 'String'
   }
   User: { // field return type name
     CreatedAt: 'String'

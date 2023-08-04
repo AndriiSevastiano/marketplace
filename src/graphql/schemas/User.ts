@@ -1,4 +1,5 @@
 import {objectType, interfaceType, intArg, extendType, nonNull, stringArg, list} from 'nexus'
+import {id} from "inversify";
 
 
 export const CommonFields = interfaceType({
@@ -27,17 +28,25 @@ export const User = objectType({
 export const UserQuery = extendType({
     type : 'Query',
     definition(t) {
-        t.field('users' , {
-            type: nonNull(list("User")),
-            resolve(_root , _args , ctx){
-                return ctx.db.GeTallUsers()
+        t.field('hello', {
+            type: "String",
+            resolve(_root,_args , ctx){
+                return "Hola"
             }
         })
-        // t.field('user', {
-        //     type: "User",
-        //     args: { id: "Int"},
+        // t.field('users' , {
+        //     type: nonNull(list("User")),
         //     resolve(_root , _args , ctx){
-        //         return  ctx.db.user.findFirst({where:{id:_args.id}})
+        //         return ctx.db.GeTallUsers()
+        //     }
+        // })
+        // t.field('findUser', {
+        //     type: "User",
+        //     args:{
+        //         id:nonNull(intArg())
+        //     },
+        //     resolve(_root , _args , ctx){
+        //         return ctx.db.getByID(_args.id)
         //     }
         // })
     }
@@ -55,9 +64,10 @@ export const UserMuation = extendType({
                 password:nonNull(stringArg()),
             },
             resolve(_root,args , ctx){
-                return ctx.db.createUser(args)
+                return ctx.db.signup(args)
             }
         })
+
     }
 })
 export const Comment = objectType({
