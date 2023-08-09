@@ -3,3 +3,4 @@ dist
 .env.development
 package-lock.json
 .idea
+static

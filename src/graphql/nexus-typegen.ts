@@ -4,9 +4,23 @@
  */
 
 
-import type { Context } from "./IContext"
-
-
+import type { core } from "nexus"
+declare global {
+  interface NexusGenCustomInputMethods<TypeName extends string> {
+    /**
+     * The `Upload` scalar type represents a file upload.
+     */
+    upload<FieldName extends string>(fieldName: FieldName, opts?: core.CommonInputFieldConfig<TypeName, FieldName>): void // "Upload";
+  }
+}
+declare global {
+  interface NexusGenCustomOutputMethods<TypeName extends string> {
+    /**
+     * The `Upload` scalar type represents a file upload.
+     */
+    upload<FieldName extends string>(fieldName: FieldName, ...opts: core.ScalarOutSpread<TypeName, FieldName>): void // "Upload";
+  }
+}
 
 
 declare global {
@@ -25,6 +39,7 @@ export interface NexusGenScalars {
   Float: number
   Boolean: boolean
   ID: string
+  Upload: any
 }
 
 export interface NexusGenObjects {
@@ -33,12 +48,6 @@ export interface NexusGenObjects {
     user: string; // String!
   }
   Mutation: {};
-  Post: { // root type
-    CreatedAt?: string | null; // String
-    UpdatedAt?: string | null; // String
-    id?: number | null; // Int
-    title?: string | null; // String
-  }
   Query: {};
   User: { // root type
     CreatedAt?: string | null; // String
@@ -47,13 +56,14 @@ export interface NexusGenObjects {
     email?: string | null; // String
     id?: number | null; // Int
     name?: string | null; // String
-    phonenumber?: string | null; // String
+    password?: string | null; // String
+    phone_number?: string | null; // String
     surname?: string | null; // String
   }
 }
 
 export interface NexusGenInterfaces {
-  CommonFields: NexusGenRootTypes['Post'] | NexusGenRootTypes['User'];
+  CommonFields: NexusGenRootTypes['User'];
 }
 
 export interface NexusGenUnions {
@@ -71,12 +81,6 @@ export interface NexusGenFieldTypes {
   Mutation: { // field return type
     createUser: NexusGenRootTypes['User']; // User!
   }
-  Post: { // field return type
-    CreatedAt: string | null; // String
-    UpdatedAt: string | null; // String
-    id: number | null; // Int
-    title: string | null; // String
-  }
   Query: { // field return type
     hello: string | null; // String
   }
@@ -87,7 +91,8 @@ export interface NexusGenFieldTypes {
     email: string | null; // String
     id: number | null; // Int
     name: string | null; // String
-    phonenumber: string | null; // String
+    password: string | null; // String
+    phone_number: string | null; // String
     surname: string | null; // String
   }
   CommonFields: { // field return type
@@ -105,12 +110,6 @@ export interface NexusGenFieldTypeNames {
   Mutation: { // field return type name
     createUser: 'User'
   }
-  Post: { // field return type name
-    CreatedAt: 'String'
-    UpdatedAt: 'String'
-    id: 'Int'
-    title: 'String'
-  }
   Query: { // field return type name
     hello: 'String'
   }
@@ -121,7 +120,8 @@ export interface NexusGenFieldTypeNames {
     email: 'String'
     id: 'Int'
     name: 'String'
-    phonenumber: 'String'
+    password: 'String'
+    phone_number: 'String'
     surname: 'String'
   }
   CommonFields: { // field return type name
@@ -144,11 +144,10 @@ export interface NexusGenArgTypes {
 }
 
 export interface NexusGenAbstractTypeMembers {
-  CommonFields: "Post" | "User"
+  CommonFields: "User"
 }
 
 export interface NexusGenTypeInterfaces {
-  Post: "CommonFields"
   User: "CommonFields"
 }
 
@@ -177,7 +176,6 @@ export type NexusGenFeaturesConfig = {
 }
 
 export interface NexusGenTypes {
-  context: Context;
   inputTypes: NexusGenInputs;
   rootTypes: NexusGenRootTypes;
   inputTypeShapes: NexusGenInputs & NexusGenEnums & NexusGenScalars;

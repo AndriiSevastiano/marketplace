@@ -1,22 +1,21 @@
 import { injectable, inject } from 'inversify'
 import 'reflect-metadata'
 import { sign } from 'jsonwebtoken';
-import {IUserDRepo} from "../../domain_repository";
-import { TYPES } from '../inversifyTypes/types'
-import {IValidation} from "../../domain_serivce";
-import {CreateUserDTO, JWTFormatDTO, LoginUserDTO, UpdateUserDTO} from "../../dto_types";
 import bcrypt from 'bcrypt'
-import {TokenData} from "../../domain_serivce";
+import { TYPES } from '../inversifyTypes/types'
+import {IUserDRepo} from "../../domain_repository";
+import {IAuthService, IValidation, TokenData} from "../../domain_serivce";
+import {CreateUserDTO, JWTFormatDTO, LoginUserDTO, UpdateUserDTO} from "../../dto_types";
 @injectable()
-export class AuthService {
+export class AuthService implements IAuthService {
     private readonly saltRounds = 2;
     public constructor(@inject(TYPES.UserRepo) private readonly  _UserRepo: IUserDRepo,
                        @inject(TYPES.UserValidation) private readonly _UserValidationService: IValidation<CreateUserDTO, UpdateUserDTO>) {}
     async signup(dto: CreateUserDTO) {
-            let {error, value}= this._UserValidationService.CreateUserValidation(dto)
-            if(error){throw new Error(error.message)}
-            const hashPassword =await bcrypt.hash(value.password ,this.saltRounds)
-            return this._UserRepo.create({...value , password:hashPassword})
+        let {error, value}= this._UserValidationService.CreateUserValidation(dto)
+        if(error){throw new Error(error.message)}
+        const hashPassword =await bcrypt.hash(value.password ,this.saltRounds)
+        return this._UserRepo.create({...value , password:hashPassword})
     }
 
     async login(dto: LoginUserDTO){

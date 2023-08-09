@@ -1,6 +1,5 @@
-import { server } from './graphql'
-import {models} from './sequelize/models'
+import {startServer} from './graphql'
+import "reflect-metadata"
 
-server.listen().then(({ url }) => {
-    console.log(`🚀 Server ready at ${url}`)
-})
+startServer()
+

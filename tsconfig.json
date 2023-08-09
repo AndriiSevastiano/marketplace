@@ -1,12 +1,15 @@
 {
   "compilerOptions": {
+    "maxNodeModuleJsDepth": 10,
     /* Language and Environment */
-    "target": "es2016",
-    "lib": ["es6"],
+    "allowJs": true,
+    "checkJs": true,
+    "lib": ["es6", "DOM"],
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     /* Modules */
-    "module": "commonjs",
+    "target": "ESNext",
+    "module": "node16",
     "rootDir": "./src/",
     "outDir": "./dist",
     "types": ["node", "jest"],
@@ -15,9 +18,9 @@
     "moduleResolution": "node",
     "sourceMap": true,
     /* Type Checking */
-    "strict": true,
+    "strict": false,
     "strictPropertyInitialization": false,
     /* Completeness */
-    "skipLibCheck": true,
+    "skipLibCheck": true
   },
 }

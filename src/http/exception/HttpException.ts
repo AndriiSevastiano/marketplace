@@ -1,10 +1,15 @@
-import {HttpStatusCode} from './enum'
+import { HttpStatusCode } from './enum_statuc_code';
+
 export class HttpException extends Error {
+    public readonly name: string;
+    public readonly httpCode: HttpStatusCode;
+    public readonly validationErrors?: any;
+
     constructor(
-        public name: string,
-        public httpCode: HttpStatusCode,
+        name: string,
+        httpCode: HttpStatusCode,
         description: string,
-        public validationErrors?: any,
+        validationErrors?: any,
     ) {
         super(description);
         this.name = name;
