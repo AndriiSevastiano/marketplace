@@ -20,7 +20,7 @@ export class User extends Abstract implements UserDomain  {
     password: string;
 
     @Index({ unique: true })
-    @Column({length: 13})
+    @Column({length: 15})
     phone_number: string;
 
     @Column({default: null})

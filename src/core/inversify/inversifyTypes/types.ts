@@ -3,4 +3,6 @@ export let TYPES = {
    UserService: Symbol('UserService'),
    UserValidation: Symbol('UserValidation'),
    AuthService: Symbol('AuthService'),
+   ProductRepo:Symbol('ProductRepo'),
+   ProductService:Symbol('ProductService')
 };

@@ -5,3 +5,4 @@ AppDataSource.initialize().then(async () => {
 }).catch(error => console.log(error))
 
 export {UserRepositoryORM} from './Repository/UserRepositoryORM'
+export {ProductRepositoryORM} from './Repository/ProductRepositoryORM'

@@ -1,13 +1,21 @@
-import express from 'express';
-import { ApolloServer, gql } from'apollo-server-express';
+import {  gql } from 'apollo-server-express';
 import { finished } from'stream/promises';
-import { ApolloServerPluginLandingPageLocalDefault } from'apollo-server-core';
-import GraphQLUpload from 'graphql-upload/GraphQLUpload.js';
-import graphqlUploadExpress from 'graphql-upload/graphqlUploadExpress.js';
 import fs from 'fs'
 import path from "path";
 import {v4} from 'uuid'
-
+import { DateTimeTypeDefinition } from 'graphql-scalars';
+import { ApolloServer } from '@apollo/server';
+import { expressMiddleware } from '@apollo/server/express4';
+import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHttpServer';
+import express from 'express';
+import http from 'http';
+import cors from 'cors';
+import bodyParser from 'body-parser';
+import {UserSchema} from "./schemas/UserSchema";
+import {UserResolvers} from "./resolvers/UserResolver";
+import GraphQLUpload from 'graphql-upload/GraphQLUpload.js';
+import graphqlUploadExpress from 'graphql-upload/graphqlUploadExpress.js';
+import cookieParser from 'cookie-parser';
 const typeDefs = gql`
     scalar Upload
     
@@ -52,23 +60,38 @@ const resolvers = {
             const out = fs.createWriteStream(`./static/${newFileName}`);
             stream.pipe(out);
             await finished(out);
-            return { newFileName, mimetype, encoding };
+            return { filename:newFileName, mimetype, encoding };
         },
     },
 };
 
-export async function startServer() {
-    const server = new ApolloServer({
-        typeDefs,
-        resolvers,
-        csrfPrevention: false,
-        plugins: [ApolloServerPluginLandingPageLocalDefault({ embed: true })],
-    });
-    await server.start();
-    const app = express();
 
-    app.use(graphqlUploadExpress());
-    server.applyMiddleware({ app });
-    await new Promise<void>((r) => app.listen({ port: 4000 }, r));
-    console.log(`🚀 Server ready at http://localhost:4000${server.graphqlPath}`);
+export async function startServer() {
+    interface MyContext {
+        res?: any;
+        req?: any;
+    }
+    const app = express();
+    const httpServer = http.createServer(app);
+
+    const server = new ApolloServer<MyContext>({
+        typeDefs:[ typeDefs, UserSchema],
+        resolvers:[resolvers, UserResolvers],
+        csrfPrevention: false,
+        plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
+    });
+
+    await server.start();
+
+    app.use(
+        '/',
+        cors<cors.CorsRequest>({credentials:true,origin:'http://localhost:3000'}),
+        graphqlUploadExpress(),
+        cookieParser(),
+        bodyParser.json({ limit: '50mb' }),
+        expressMiddleware(server, {context: async ({ req, res }) => {return {  req,res };},}),
+    );
+
+    await new Promise<void>((resolve) => httpServer.listen({ port: 4000 }, resolve));
+    console.log(`🚀 Server ready at http://localhost:4000/`);
 }

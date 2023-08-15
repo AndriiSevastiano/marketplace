@@ -1,2 +1,2 @@
 export * from './IAuthService';
-export * from './IValidation';
+export * from './IUserValidation';

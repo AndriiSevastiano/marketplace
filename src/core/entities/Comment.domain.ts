@@ -1,7 +1,7 @@
 import { BaseDomain } from './Base.domain';
 import { UserDomain } from './User.domain';
 
-export abstract class CommentDomain extends BaseDomain {
+export  class CommentDomain extends BaseDomain {
    comment_body: string;
    like_count?: number;
    dislike_count?: number;
