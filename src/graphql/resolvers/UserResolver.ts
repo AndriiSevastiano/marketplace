@@ -1,4 +1,4 @@
-import {GAuthService} from '../../core/inversify/index'
+import {GAuthService} from '../../core/inversify'
 import { DateTimeResolver } from 'graphql-scalars';
 export const UserResolvers = {
     DateTime:DateTimeResolver,

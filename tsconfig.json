@@ -17,7 +17,7 @@
     "forceConsistentCasingInFileNames": true,
     "moduleResolution": "node",
     "sourceMap": true,
-    /* Type Checking */
+    /* Type_Product Checking */
     "strict": false,
     "strictPropertyInitialization": false,
     /* Completeness */

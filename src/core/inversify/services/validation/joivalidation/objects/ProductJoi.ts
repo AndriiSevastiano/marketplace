@@ -6,7 +6,8 @@ const ObjProductValidation = {
     description: Joi.string().required().min(10).max(320),
     IMG: Joi.string().optional(),
     price: Joi.number().positive().required(),
-    currency: Joi.string().required().min(1).max(12)
+    currency: Joi.string().required().min(1).max(12),
+    type: Joi.number().positive().integer().required()
 }
 export const CreateProductValidation = Joi.object<CreateProduct>(ObjProductValidation)
 

@@ -7,4 +7,5 @@ export  class ProductDomain extends BaseDomain{
     currency:string
     IMG?:string
     rating:number
+    type:any
 }

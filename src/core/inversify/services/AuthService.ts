@@ -10,9 +10,9 @@ import {CreateUserDTO, JWTFormatDTO, LoginUserDTO, UpdateUserDTO} from "../../dt
 export class AuthService implements IAuthService {
     private readonly saltRounds = 2;
     public constructor(@inject(TYPES.UserRepo) private readonly  _UserRepo: IUserDRepo,
-                       @inject(TYPES.UserValidation) private readonly _UserValidationService: IUserValidation<CreateUserDTO, UpdateUserDTO>) {}
+                       @inject(TYPES.UserValidation) private readonly _UserValidationService: IUserValidation) {}
     async signup(dto: CreateUserDTO) {
-        let {error, value}= this._UserValidationService.CreateUserValidation(dto)
+        let {error, value}= this._UserValidationService.CreateObjectValidation(dto)
         if(error){throw new Error(error.message)}
         const hashPassword =await bcrypt.hash(value.password ,this.saltRounds)
         return this._UserRepo.create({...value , password:hashPassword})

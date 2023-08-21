@@ -1,4 +1,4 @@
-import { injectable } from 'inversify';
+import {id, injectable} from 'inversify';
 import 'reflect-metadata';
 import { plainToClass, plainToInstance } from 'class-transformer';
 import {AppDataSource} from "../data-source";
@@ -13,7 +13,7 @@ export class ProductRepositoryORM implements IProductDRepo {
     private readonly ProductRepo = AppDataSource.getRepository(Product)
 
    async create(dto: CreateProduct): Promise<Awaited<ProductDomain>> {
-       const product =await this.ProductRepo.createQueryBuilder().insert().into(Product).values({name:dto.name,description:dto.description,price:dto.price,currency:dto.currency}).execute();
+       const product =await this.ProductRepo.createQueryBuilder().insert().into(Product).values(dto).execute();
        return plainToInstance(ProductDomain,  {...dto, ...product.raw[0]});
     }
 
@@ -23,13 +23,16 @@ export class ProductRepositoryORM implements IProductDRepo {
 
    async getAll(): Promise<Awaited<ProductDomain[]>> {
         const product = await this.ProductRepo.find()
-        return plainToInstance(ProductDomain,product)
+       return plainToInstance(ProductDomain,product)
     }
 
    async getByID(id: number): Promise<Awaited<ProductDomain>> {
-        return Promise.resolve(undefined);
+       const product = await this.ProductRepo.findOne({where:{id:id}})
+       return plainToInstance(ProductDomain,product)
     }
 
-
-
+   async products_byType(product: number): Promise<Awaited<ProductDomain[]>> {
+       const Products = await this.ProductRepo.find({where:{type:{id:product}}})
+       return plainToInstance(ProductDomain , Products as []);
+    }
 }

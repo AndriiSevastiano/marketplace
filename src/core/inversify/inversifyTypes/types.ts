@@ -4,5 +4,7 @@ export let TYPES = {
    UserValidation: Symbol('UserValidation'),
    AuthService: Symbol('AuthService'),
    ProductRepo:Symbol('ProductRepo'),
-   ProductService:Symbol('ProductService')
+   ProductService:Symbol('ProductService'),
+   ProductValidation:Symbol('ProductValidation'),
+   TypeRepo:Symbol('TypeRepo')
 };

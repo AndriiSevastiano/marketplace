@@ -16,22 +16,21 @@ import {UserResolvers} from "./resolvers/UserResolver";
 import GraphQLUpload from 'graphql-upload/GraphQLUpload.js';
 import graphqlUploadExpress from 'graphql-upload/graphqlUploadExpress.js';
 import cookieParser from 'cookie-parser';
+import {ProductResolver} from "./resolvers/ProductResolver";
+import {ProductSchema} from "./schemas/ProductSchema";
+import {TypeResolvers} from "./resolvers/TypeResolver";
+import {PTypeSchema} from './schemas/TypeSchema'
 const typeDefs = gql`
     scalar Upload
     
-    type File {
-        filename: String!
-        mimetype: String!
-        encoding: String!
-    }
-
+    
     type Query {
         otherFields: Boolean!
         getUploadedFile:Upload
     }
 
     type Mutation {
-        singleUpload(file: Upload!): File!
+        singleUpload(file: Upload!): String!
     }
 `;
 
@@ -60,7 +59,7 @@ const resolvers = {
             const out = fs.createWriteStream(`./static/${newFileName}`);
             stream.pipe(out);
             await finished(out);
-            return { filename:newFileName, mimetype, encoding };
+            return newFileName;
         },
     },
 };
@@ -75,8 +74,8 @@ export async function startServer() {
     const httpServer = http.createServer(app);
 
     const server = new ApolloServer<MyContext>({
-        typeDefs:[ typeDefs, UserSchema],
-        resolvers:[resolvers, UserResolvers],
+        typeDefs:[ typeDefs, UserSchema,ProductSchema, PTypeSchema],
+        resolvers:[resolvers, UserResolvers,ProductResolver, TypeResolvers],
         csrfPrevention: false,
         plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
     });
@@ -86,12 +85,15 @@ export async function startServer() {
     app.use(
         '/',
         cors<cors.CorsRequest>({credentials:true,origin:'http://localhost:3000'}),
-        graphqlUploadExpress(),
         cookieParser(),
         bodyParser.json({ limit: '50mb' }),
-        expressMiddleware(server, {context: async ({ req, res }) => {return {  req,res };},}),
     );
-
+    app.use('/graphql',graphqlUploadExpress(),expressMiddleware(server, {context: async ({ req, res }) => {return {  req,res };},}))
+    app.use('/reper',(req,res)=>res.send('reper'))
+    app.get('/images/:id', (req, res) => {
+        const fileName = req.params.id;
+        res.sendFile(`${fileName}`,{root:'./static'})
+    });
     await new Promise<void>((resolve) => httpServer.listen({ port: 4000 }, resolve));
-    console.log(`🚀 Server ready at http://localhost:4000/`);
+    console.log(`🚀 Server ready at http://localhost:4000/graphql`);
 }
